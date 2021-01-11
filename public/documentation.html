@@ -3,15 +3,90 @@
   <head>
     <meta charset="utf-8" />
     <title>documentation</title>
+    <link rel="stylesheet" type="text/css" href="../css/styles.css" />
   </head>
 
   <body>
     <h1>Documentation Page</h1>
     <p>
-      To build the server­side component of a “movies” web application. The web
-      application will provide users with access to information about different
-      movies, directors, and genres. Users will be able to sign up, update their
-      personal information, and create a list of their favorite movies.
+      Users can sign up and create list of their favourite movies.
     </p>
+    <div>
+      <table>
+        <tr>
+          <th>Business Logic</th>
+          <th>URL Endpoint</th>
+          <th>HTTP Method</th>
+          <th>Request Body Data Format</th>
+          <th>Response Body Data Format</th>
+        </tr>
+        <tr>
+          <td>Get a list of all movies</td>
+          <td>/movies</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>JSON object holding data about all movies</td>
+        </tr>
+        <tr>
+          <td>
+            Get information about one specific movie by title, use %20 for
+            spaces
+          </td>
+          <td>/movies/:title</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>JSON object about a specific movie</td>
+        </tr>
+        <tr>
+          <td>Get data about genres by title/name</td>
+          <td>movies/Genres/:genre</td>
+          <td>Get</td>
+          <td>None</td>
+          <td>JSON</td>
+        </tr>
+        <tr>
+          <td>Get data about director by name</td>
+          <td>movies/Directors/:name</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>JSON</td>
+        </tr>
+        <tr>
+          <td>Allow new users to register</td>
+          <td>/users</td>
+          <td>POST</td>
+          <td>JSON</td>
+          <td>JSON</td>
+        </tr>
+        <tr>
+          <td>Allow users to update their user information</td>
+          <td>/users/:username</td>
+          <td>PUT</td>
+          <td>JSON</td>
+          <td>JSON</td>
+        </tr>
+        <tr>
+          <td>Allow users to add a movie to their list of favourites</td>
+          <td>/users/:username/movies/movieID</td>
+          <td>POST</td>
+          <td>JSON</td>
+          <td>JSON</td>
+        </tr>
+        <tr>
+          <td>Allow users to remove a movie from their list of favourites</td>
+          <td>/users/:username/movies/movieID</td>
+          <td>DELETE</td>
+          <td>None</td>
+          <td>Message</td>
+        </tr>
+        <tr>
+          <td>Allow existing users to deregistor</td>
+          <td>/users/:username</td>
+          <td>DELETE</td>
+          <td>None</td>
+          <td>Message</td>
+        </tr>
+      </table>
+    </div>
   </body>
 </html>
