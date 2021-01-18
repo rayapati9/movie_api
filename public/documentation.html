@@ -7,7 +7,7 @@
   </head>
 
   <body>
-    <h1>Documentation Page</h1>
+    <h1>API Documentation Page</h1>
     <p>
       Users can sign up and create list of their favourite movies.
     </p>
@@ -16,75 +16,174 @@
         <tr>
           <th>Business Logic</th>
           <th>URL Endpoint</th>
-          <th>HTTP Method</th>
+          <th>Query parameters</th>
+          <th>Method type</th>
           <th>Request Body Data Format</th>
+          <th>Example request</th>
           <th>Response Body Data Format</th>
+          <th>Example Response</th>
         </tr>
         <tr>
           <td>Get a list of all movies</td>
           <td>/movies</td>
+          <td>N/A</td>
           <td>GET</td>
+          <td>Nothing in body</td>
           <td>None</td>
           <td>JSON object holding data about all movies</td>
+          <td>see "get data about single movie by its title" for each item</td>
         </tr>
         <tr>
           <td>
             Get information about one specific movie by title, use %20 for
             spaces
           </td>
-          <td>/movies/:title</td>
+          <td>/movies</td>
+          <td>:title</td>
           <td>GET</td>
+          <td>Nothing in body request</td>
           <td>None</td>
           <td>JSON object about a specific movie</td>
+          <td>
+            <span>{</span>
+            <span>_id: '5ff8a361ccf09d1cd55495f9'</span>
+            <span>title:'Bahubali'</span>
+            <span
+              >Description: 'In the kingdom of Mahishmati, while pursuing his
+              love, Shivudu learns about the conflict ridden past of his family
+              and his legacy. He must now prepare himself to face his newfound
+              arch-enemy.'</span
+            >
+            <span>Genre: 'Thriller'</span>
+            <span>Director: { </span>
+            <span>Rajamouli</span>
+            <span>Age: 45</span>
+            <span>}</span>
+          </td>
         </tr>
         <tr>
           <td>Get data about genres by title/name</td>
-          <td>movies/Genres/:genre</td>
+          <td>movies/Genres</td>
+          <td>/:genre</td>
           <td>Get</td>
+          <td>Nothing in body</td>
           <td>None</td>
           <td>JSON</td>
+          <td>
+            <span>{</span>
+            <span
+              >Thrillers: This genre of movies are characterized and defined by
+              the moods they elicit, giving viewers heightened feelings of
+              suspense, excitement, surprise, anticipation and anxiety.</span
+            >
+            <span>}</span>
+          </td>
         </tr>
         <tr>
           <td>Get data about director by name</td>
-          <td>movies/Directors/:name</td>
+          <td>movies/Directors</td>
+          <td>/:name</td>
           <td>GET</td>
+          <td>nothing in body</td>
           <td>None</td>
           <td>JSON</td>
+          <td>
+            <span>{</span>
+            <span>Rajamouli Age: 45</span>
+          </td>
         </tr>
         <tr>
           <td>Allow new users to register</td>
           <td>/users</td>
+          <td>N/A</td>
           <td>POST</td>
           <td>JSON</td>
+          <td>
+            <span>{</span>
+            <span>username:divya</span>
+            <span>password: 4567</span>
+            <span>birthday: 01/01/1994</span>
+            <span>email:divya@gmail.com</span>
+            <span>}</span>
+          </td>
           <td>JSON</td>
+          <td>
+            <span>{</span>
+            <span>id: 28</span>
+            <span>username:divya</span>
+            <span>password: 4567</span>
+            <span>birthday: 01/01/1994</span>
+            <span>email:divya@gmail.com</span>
+            <span>}</span>
+          </td>
         </tr>
         <tr>
           <td>Allow users to update their user information</td>
-          <td>/users/:username</td>
+          <td>/users</td>
+          <td>/:username</td>
           <td>PUT</td>
+          <td>Nothing</td>
+          <td>N/A</td>
           <td>JSON</td>
-          <td>JSON</td>
+          <td>
+            <span>{</span>
+            <span>id: 28</span>
+            <span>username:divya</span>
+            <span>password: 4567</span>
+            <span>birthday: 01/01/1994</span>
+            <span>email:divya@gmail.com</span>
+            <span>}</span>
+          </td>
         </tr>
         <tr>
           <td>Allow users to add a movie to their list of favourites</td>
-          <td>/users/:username/movies/movieID</td>
+          <td>/users/:username</td>
+          <td>movies/:movieID</td>
           <td>POST</td>
-          <td>JSON</td>
-          <td>JSON</td>
+          <td>nothing</td>
+          <td>movieID</td>
+          <td>JSON object with updated user info</td>
+          <td>
+            <span>{</span>
+            <span>id: 28</span>
+            <span>username:divya</span>
+            <span>password: 4567</span>
+            <span>birthday: 01/01/1994</span>
+            <span>email:divya@gmail.com</span>
+            <span
+              >FavouriteMovies:[ObjectID: ("5ff8b3168ac2b2804e15411b")]</span
+            >
+            <span>}</span>
+          </td>
         </tr>
         <tr>
           <td>Allow users to remove a movie from their list of favourites</td>
-          <td>/users/:username/movies/movieID</td>
+          <td>/users/:username</td>
+          <td>movies/:movieID</td>
           <td>DELETE</td>
+          <td>nothing</td>
           <td>None</td>
-          <td>Message</td>
+          <td>json with updated user data</td>
+          <td>
+            <span>{</span>
+            <span>id: 28</span>
+            <span>username:divya</span>
+            <span>password: 4567</span>
+            <span>birthday: 01/01/1994</span>
+            <span>email:divya@gmail.com</span>
+            <span>FavouriteMovies:[]</span>
+            <span>}</span>
+          </td>
         </tr>
         <tr>
           <td>Allow existing users to deregistor</td>
-          <td>/users/:username</td>
+          <td>/users</td>
+          <td>/:username</td>
           <td>DELETE</td>
+          <td>nothing</td>
           <td>None</td>
           <td>Message</td>
+          <td>username was deleted</td>
         </tr>
       </table>
     </div>
