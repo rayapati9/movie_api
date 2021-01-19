@@ -26,7 +26,7 @@ app.use(
 let auth = require("./auth")(app);
 
 //connects to existing MongoDB database
-/* mongoose.connect("mongodb://localhost:27017/myFlixDB", {
+/*mongoose.connect("mongodb://localhost:27017/myFlixDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }); */
@@ -136,9 +136,8 @@ app.post(
       "username contains non alphanumeric characters - not allowed."
     ).isAlphanumeric(),
     check("password", "password is required").not().isEmpty(),
-    check("Email", "Email does not appear to be valid").isEmail(),
+    check("email", "email does not appear to be valid").isEmail(),
   ],
-  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     // check validation object for errors
     let errors = validationResult(req);
@@ -184,12 +183,12 @@ app.put(
       "username contains non alphanumeric characters - not allowed."
     ).isAlphanumeric(),
     check("password", "password is required").not().isEmpty(),
-    check("Email", "Email does not appear to be valid").isEmail(),
+    check("email", "email does not appear to be valid").isEmail(),
   ],
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     //check the validation object for errors
-    let validation = validationResult(req);
+    let errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
