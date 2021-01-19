@@ -5,6 +5,7 @@ const express = require("express"),
   cors = require("cors"),
   mongoose = require("mongoose"),
   passport = require("passport"),
+  { check, validationResult } = require("express-validator"),
   Models = require("./models.js"),
   Users = Models.User,
   Movies = Models.Movie;
@@ -15,8 +16,12 @@ const app = express();
 
 //logs all requests using Morgan, prints in terminal.
 app.use(morgan("common"));
-app.use(cors());
 app.use(bodyParser.json());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 let auth = require("./auth")(app);
 
@@ -119,8 +124,23 @@ app.get(
 //allow new users to register
 app.post(
   "/users",
+  [
+    check("username", "username is required").isLength({ min: 5 }),
+    check(
+      "username",
+      "username contains non alphanumeric characters - not allowed."
+    ).isAlphanumeric(),
+    check("password", "password is required").not().isEmpty(),
+    check("Email", "Email does not appear to be valid").isEmail(),
+  ],
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    // check validation object for errors
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    let hashedPassword = Users.hashPassword(req.body.password);
     Users.findOne({ username: req.body.username })
       .then((user) => {
         if (user) {
@@ -128,7 +148,7 @@ app.post(
         } else {
           Users.create({
             username: req.body.username,
-            password: req.body.password,
+            password: hashedPassword,
             email: req.body.email,
             birthday: req.body.birthday,
           })
@@ -152,8 +172,23 @@ app.post(
 
 app.put(
   "/users/:username",
+  [
+    check("username", "username is required").isLength({ min: 5 }),
+    check(
+      "username",
+      "username contains non alphanumeric characters - not allowed."
+    ).isAlphanumeric(),
+    check("password", "password is required").not().isEmpty(),
+    check("Email", "Email does not appear to be valid").isEmail(),
+  ],
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    //check the validation object for errors
+    let validation = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
     Users.findOneAndUpdate(
       { username: req.params.username },
       {
@@ -253,7 +288,7 @@ app.use((err, req, res, next) => {
 });
 
 //listen for requests
-
-app.listen(8080, () => {
-  console.log("your app is listening on port 8080.");
+const port = process.env.PORT || 8080;
+app.listen(port, "0.0.0.0", () => {
+  console.log("Listening on Port " + port);
 });
