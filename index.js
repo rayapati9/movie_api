@@ -25,8 +25,8 @@ app.use(
 
 let auth = require("./auth")(app);
 
-/*connects to existing MongoDB database
-mongoose.connect("mongodb://localhost:27017/myFlixDB", {
+//connects to existing MongoDB database
+/*mongoose.connect("mongodb://localhost:27017/myFlixDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }); */
@@ -41,7 +41,9 @@ app.get("/", (req, res) => {
   res.send("Welcome to myFlix app!");
 });
 
-//get the list of data about all the movies
+/**
+ * get the list of data about all the movies
+ */
 app.get(
   "/movies",
   passport.authenticate("jwt", { session: false }),
@@ -56,8 +58,9 @@ app.get(
       });
   }
 );
-
-//get the data about the movie by its title
+/**
+ *get the data about the movie by its title
+ */
 
 app.get(
   "/movies/:title",
@@ -73,8 +76,9 @@ app.get(
       });
   }
 );
-
-//return data about a genre by its title
+/**
+ *return data about a genre by its title
+ */
 
 app.get(
   "/movies/genres/:name",
@@ -93,7 +97,9 @@ app.get(
   }
 );
 
-//return data about director by name
+/**
+ *return data about director by name
+ */
 
 app.get(
   "/movies/Directors/:name",
@@ -109,8 +115,9 @@ app.get(
       });
   }
 );
-
-//get all users
+/**
+ *get all users
+ */
 app.get(
   "/users",
   passport.authenticate("jwt", { session: false }),
@@ -126,7 +133,27 @@ app.get(
   }
 );
 
-//allow new users to register
+/**
+ *get the data about the user by their name
+ */
+app.get(
+  "/users/:username",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Users.findOne({ username: req.params.username })
+      .then((user) => {
+        res.json(user);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      });
+  }
+);
+
+/**
+ *allow new users to register
+ */
 app.post(
   "/users",
   [
@@ -172,7 +199,9 @@ app.post(
   }
 );
 
-//update user info
+/**
+ *update user info
+ */
 
 app.put(
   "/users/:username",
@@ -193,12 +222,13 @@ app.put(
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
+    let hashedPassword = Users.hashPassword(req.body.password);
     Users.findOneAndUpdate(
       { username: req.params.username },
       {
         $set: {
           username: req.body.username,
-          password: req.body.password,
+          password: hashedPassword,
           email: req.body.email,
           birthday: req.body.birthday,
         },
@@ -216,56 +246,55 @@ app.put(
   }
 );
 
-// users to add list of their fav movies
+/**
+ * users to add list of their fav movies
+ */
 
-app.post(
-  "/users/:username/movies/:movieID",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Users.findOneAndUpdate(
-      { username: req.params.username },
-      {
-        $push: { FavouriteMovies: req.params.movieID },
-      },
-      { new: true },
-      (err, updatedUser) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send("Error: " + err);
-        } else {
-          res.json(updatedUser);
-        }
+app.post("/users/:username/movies/:movieID", (req, res) => {
+  Users.findOneAndUpdate(
+    { username: req.params.username },
+    {
+      $push: { FavouriteMovies: req.params.movieID },
+    },
+    { new: true },
+    (err, updatedUser) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      } else {
+        res.json(updatedUser);
       }
-    );
-  }
-);
+    }
+  );
+});
 
-// delete a movie from the list of users fav movies
-app.delete(
-  "/users/:username/movies/:movieID",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Users.findOneAndUpdate(
-      { username: req.params.username },
-      {
-        $pull: {
-          FavouriteMovies: req.params.movieID,
-        },
+/**
+ * delete a movie from the list of users fav movies
+ */
+
+app.delete("/users/:username/movies/:movieID", (req, res) => {
+  Users.findOneAndUpdate(
+    { username: req.params.username },
+    {
+      $pull: {
+        FavouriteMovies: req.params.movieID,
       },
-      { new: true },
-      (err, updateUser) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send("Error: " + err);
-        } else {
-          res.json(updateUser);
-        }
+    },
+    { new: true },
+    (err, updateUser) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      } else {
+        res.json(updateUser);
       }
-    );
-  }
-);
+    }
+  );
+});
 
-//deletes a user from database
+/**
+ *deletes a user from database
+ */
 
 app.delete(
   "/users/:username",
